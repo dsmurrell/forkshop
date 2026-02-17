@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors — edit these to match your brand */
+  --color-cream-50: #FFFDF9;
+  --color-cream-100: #FAF7F2;
+  --color-cream-200: #F5F0E8;
+  --color-cream-300: #EDE5D8;
+
+  --color-espresso: #2C1810;
+  --color-espresso-light: #4A3228;
+  --color-espresso-lighter: #6B4D3E;
+
+  --color-copper: #B87333;
+  --color-copper-light: #D4915A;
+  --color-copper-dark: #8B5A2B;
+
+  --color-sage: #9CAF88;
+  --color-sage-light: #B8C9A8;
+
+  /* Reset built-in rose palette, then define custom rose */
+  --color-rose-*: initial;
+  --color-rose: #C9A9A6;
+  --color-rose-light: #E0CCC9;
+
+  /* Fonts — CSS variables set by Next.js font loader */
+  --font-sans: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+
+  /* Custom animations */
+  --animate-bounce-subtle: bounce-subtle 0.5s ease-in-out;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-slide-in-right: slide-in-right 0.3s ease-out;
+  --animate-slide-out-right: slide-out-right 0.3s ease-in;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes slide-out-right {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-cream-100 text-espresso font-sans;
+  }
+
+  ::selection {
+    @apply bg-copper/20 text-espresso;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .btn-primary {
+    @apply bg-copper hover:bg-copper-dark text-cream-50 font-sans font-medium
+           py-3 px-6 rounded-lg transition-all duration-200
+           hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border border-espresso/20 hover:border-espresso/40
+           text-espresso font-sans font-medium py-3 px-6 rounded-lg
+           transition-all duration-200;
+  }
+}
