@@ -1,15 +1,16 @@
 # Next.js Shop Template
 
-A beautiful, production-ready e-commerce storefront built with Next.js 14, Stripe Checkout, and Tailwind CSS. Originally built for [The Fudge Sisters](https://thefudgesisters.com), designed to be forked and repurposed for any small shop.
+A beautiful, production-ready e-commerce storefront built with Next.js 16, Stripe Checkout, and Tailwind CSS 4. Originally built for [The Fudge Sisters](https://thefudgesisters.com), designed to be forked and repurposed for any small shop.
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
+- **Framework:** Next.js 16 (App Router, Turbopack)
+- **Language:** TypeScript 5.9
+- **Styling:** Tailwind CSS 4 (CSS-first configuration)
 - **Payments:** Stripe Checkout (one-time payments)
-- **State:** Zustand (cart persistence via localStorage)
-- **Animations:** Framer Motion
+- **State:** Zustand 5 (cart persistence via localStorage)
+- **Animations:** Framer Motion 12
+- **UI:** React 19
 - **Deployment:** AWS Amplify (also works on Vercel)
 
 ## Quick Start
@@ -36,7 +37,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the shop.
 
 All shop-specific configuration lives in **two files**:
 
-### 1. `lib/shop-config.ts` — Brand, commerce, content & theme
+### 1. `lib/shop-config.ts` — Brand, commerce, content
 
 This is the single source of truth for everything that makes the shop yours:
 
@@ -47,7 +48,6 @@ This is the single source of truth for everything that makes the shop yours:
 | `seo` | Page titles, descriptions, keywords |
 | `images` | Logo, hero banner, about image paths |
 | `analytics` | Plausible script URL (set to `null` to disable) |
-| `themeColors` | Tailwind color palette (cream, espresso, copper, etc.) |
 | `content` | All page copy — hero, about, contact, 404, error, success pages |
 
 ### 2. `lib/products.ts` — Product catalog
@@ -60,7 +60,23 @@ Define your products here. Each product needs:
 - `stripePriceId` (from your Stripe dashboard)
 - `ingredients`, `weight`, `minQuantity`
 
-### 3. Images
+### 3. Theme colors
+
+Colors are defined in `app/globals.css` inside the `@theme` block using Tailwind CSS 4's CSS-first configuration:
+
+```css
+@theme {
+  --color-cream-50: #FFFDF9;
+  --color-cream-100: #FAF7F2;
+  --color-espresso: #2C1810;
+  --color-copper: #B87333;
+  /* ... */
+}
+```
+
+Edit these CSS custom properties to change the color palette across the entire site.
+
+### 4. Images
 
 Replace the files in `public/images/` with your own:
 
@@ -76,7 +92,7 @@ Also replace favicons and PWA icons:
 - `apple-touch-icon.png`
 - `web-app-manifest-192x192.png`, `web-app-manifest-512x512.png`
 
-### 4. `public/manifest.json`
+### 5. `public/manifest.json`
 
 Update the PWA manifest with your shop name, description, and theme colors to match your `lib/shop-config.ts` values.
 
@@ -92,9 +108,7 @@ The checkout flow uses Stripe Checkout Sessions — customers are redirected to 
 
 ## Using a Coding Agent
 
-The fastest way to repurpose this shop is with a coding agent (Cursor, Claude, etc.). See **[SETUP_PROMPT.md](SETUP_PROMPT.md)** for a ready-to-paste prompt.
-
-If you open this repo in Cursor, the agent will automatically pick up project context from `.cursor/rules/` and understand the configuration structure.
+The fastest way to repurpose this shop is with a coding agent (Cursor, Claude, etc.). See **[SETUP_PROMPT.md](SETUP_PROMPT.md)** for a ready-to-paste prompt — or paste it into Claude with a short description of your shop and let it fill in the blanks for you.
 
 ## Deployment
 
@@ -129,6 +143,7 @@ This also works on Vercel out of the box:
 │   ├── product/[slug]/page.tsx # Product detail pages
 │   ├── layout.tsx              # Root layout, metadata, analytics
 │   ├── page.tsx                # Homepage (hero, products, about, contact)
+│   ├── globals.css             # Tailwind 4 theme (colors, fonts, animations)
 │   ├── not-found.tsx           # 404 page
 │   ├── error.tsx               # Error boundary
 │   ├── sitemap.ts              # Auto-generated sitemap
@@ -150,8 +165,7 @@ This also works on Vercel out of the box:
 │   └── manifest.json           # PWA manifest
 ├── .env.example                # Environment variable template
 ├── SETUP_PROMPT.md             # Coding agent prompt
-├── amplify.yml                 # AWS Amplify build config
-└── tailwind.config.ts          # Tailwind (imports colors from shop-config)
+└── amplify.yml                 # AWS Amplify build config
 ```
 
 ## License

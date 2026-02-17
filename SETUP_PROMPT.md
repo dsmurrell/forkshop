@@ -2,6 +2,8 @@
 
 Copy the prompt below into your coding agent (Cursor, Claude, ChatGPT, etc.) after filling in the bracketed placeholders with your own details.
 
+> **Tip:** You don't have to fill in the placeholders yourself. Paste the entire prompt into Claude (or a similar AI) along with a short description like *"I've forked this repo with a prompt to help me set it up. I want to create a shop that sells pottery. Can you fill in the prompt for me?"* — and it will generate a completed version of the prompt tailored to your shop. Then paste that filled-in prompt into your coding agent.
+
 ---
 
 ## The Prompt
@@ -36,7 +38,6 @@ This is the central config file. Update ALL sections:
 - `seo` — title, titleTemplate, description, keywords relevant to my products
 - `images` — keep the paths but update alt text to match my products
 - `analytics` — set plausibleScript to null (I'll set up my own analytics later)
-- `themeColors` — choose a color palette that matches my brand vibe. Keep the same structure (cream/espresso/copper/sage/rose naming or rename them) but pick colors that fit my aesthetic. Make sure there's good contrast for readability.
 - `manifestColors` — update to match the new theme
 - `content` — rewrite ALL content sections:
   - hero: eyebrow text, heading (split into heading + accent word), description, CTA button text
@@ -62,13 +63,16 @@ Replace the product array with my products. For each product:
 
 Also update the test/prod price ID objects at the top to have keys matching my product slugs.
 
-### 3. Update `public/manifest.json`
+### 3. Update `app/globals.css` — Theme colors
+The `@theme` block in `globals.css` defines the Tailwind color palette. Update the CSS custom properties to match my brand vibe (e.g. `--color-cream-100`, `--color-espresso`, `--color-copper`, etc.). You can rename colors or add new ones. Make sure there's good contrast for readability.
+
+### 4. Update `public/manifest.json`
 Update `name`, `short_name`, `description`, `background_color`, and `theme_color` to match the new config.
 
-### 4. Update `package.json`
+### 5. Update `package.json`
 Change the `name` field to match my shop.
 
-### 5. Review and adjust
+### 6. Review and adjust
 - If my products don't have "ingredients", update `lib/types.ts` to rename the `ingredients` field to something appropriate (e.g. `materials`, `details`) and update `components/ProductPageContent.tsx` accordingly
 - If I don't need minimum order quantities, set `defaultMinQuantity` to 1 in the config and remove the min order notes
 - Make sure the allergen info section in ProductPageContent.tsx is appropriate for my product type, or remove it if not relevant

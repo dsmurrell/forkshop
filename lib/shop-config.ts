@@ -89,8 +89,7 @@ export const images = {
 // Analytics (set to null to disable)
 // ---------------------------------------------------------------------------
 export const analytics = {
-  plausibleScript:
-    'https://plausible.io/js/pa-q-Yxv1ZnmKGKh67eWBgQ1.js' as string | null,
+  plausibleScript: null as string | null,
 };
 
 // ---------------------------------------------------------------------------

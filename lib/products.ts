@@ -2,19 +2,21 @@ import { Product } from './types';
 import { commerce } from './shop-config';
 
 // Test mode price IDs (Stripe test mode)
+// Replace these with your own Price IDs from https://dashboard.stripe.com/products
 const testPriceIds = {
-  biscoff: 'price_1Sc1yeDilzqSU8oiNengWK9Y',
-  original: 'price_1Sc1y5DilzqSU8oihoUX2dIQ',
-  pecan: 'price_1Sc1xhDilzqSU8oiPIAZm82b',
-  chocolate: 'price_1Sc1x8DilzqSU8oiEnHYogr3',
+  biscoff: 'price_REPLACE_ME',
+  original: 'price_REPLACE_ME',
+  pecan: 'price_REPLACE_ME',
+  chocolate: 'price_REPLACE_ME',
 };
 
 // Production mode price IDs (Stripe live mode)
+// Replace these with your live Price IDs when going to production
 const prodPriceIds = {
-  biscoff: 'price_1Sc6NlDI8TGhJjyUSPhPUvNP',
-  original: 'price_1Sc6NODI8TGhJjyUkQanLLSh',
-  pecan: 'price_1Sc6N5DI8TGhJjyUO0oUuYO4',
-  chocolate: 'price_1Sc6MgDI8TGhJjyUdhUbsLy1',
+  biscoff: 'price_REPLACE_ME',
+  original: 'price_REPLACE_ME',
+  pecan: 'price_REPLACE_ME',
+  chocolate: 'price_REPLACE_ME',
 };
 
 // Select price IDs based on PRICE_MODE environment variable

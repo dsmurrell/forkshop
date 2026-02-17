@@ -1,6 +1,7 @@
 {
-  "name": "the-fudge-sisters",
-  "version": "0.1.0",
+  "name": "forkshop",
+  "version": "1.0.0",
+  "description": "A forkable Next.js e-commerce shop template with Stripe Checkout, Tailwind CSS 4, and Zustand",
   "private": true,
   "scripts": {
     "dev": "next dev",
