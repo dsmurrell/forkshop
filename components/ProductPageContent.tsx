@@ -8,23 +8,29 @@ import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductCard from '@/components/ProductCard';
 import { Product } from '@/lib/types';
-import { commerce, content, formatPrice } from '@/lib/shop-config';
+import { commerce, content, formatPrice, productConfig, type DetailField } from '@/lib/shop-config';
 
 /**
- * Renders an ingredients string with ALL-CAPS words wrapped in <strong>.
- * Matches words of 2+ uppercase letters (e.g. MILK, WHEAT, SOYA, PECAN NUTS).
+ * Lightweight inline markdown: **bold**, *italic*, and \n line breaks.
+ * Used for product metadata values and the detail note.
  */
-function renderIngredients(text: string) {
-  const parts = text.split(/(\b[A-Z]{2,}(?:\s+[A-Z]{2,})*\b)/g);
-  return parts.map((part, i) =>
-    /^[A-Z]{2,}(?:\s+[A-Z]{2,})*$/.test(part) ? (
-      <strong key={i} className="font-semibold">
-        {part}
-      </strong>
-    ) : (
-      <Fragment key={i}>{part}</Fragment>
-    )
-  );
+function renderMarkdown(text: string) {
+  const tokens = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\n)/g);
+  return tokens.map((token, i) => {
+    if (token === '\n') return <br key={i} />;
+    if (token.startsWith('**') && token.endsWith('**')) {
+      return <strong key={i} className="font-semibold">{token.slice(2, -2)}</strong>;
+    }
+    if (token.startsWith('*') && token.endsWith('*')) {
+      return <em key={i}>{token.slice(1, -1)}</em>;
+    }
+    return <Fragment key={i}>{token}</Fragment>;
+  });
+}
+
+function renderDetailValue(value: string, field: DetailField) {
+  if (field.markdown) return renderMarkdown(value);
+  return value;
 }
 
 interface ProductPageContentProps {
@@ -35,6 +41,7 @@ interface ProductPageContentProps {
 export default function ProductPageContent({ product, relatedProducts }: ProductPageContentProps) {
   const minQty = product.minQuantity ?? 1;
   const [quantity, setQuantity] = useState(minQty);
+  const outOfStock = product.stock !== 'unlimited' && product.stock <= 0;
 
   const decrementQuantity = () => {
     if (quantity > minQty) setQuantity(quantity - 1);
@@ -46,9 +53,12 @@ export default function ProductPageContent({ product, relatedProducts }: Product
 
   const formattedPrice = formatPrice(product.price);
 
+  const visibleFields = productConfig.detailFields.filter(
+    (f) => product.metadata[f.key]
+  );
+
   return (
     <>
-      {/* Back link */}
       <div className="container-custom pt-8">
         <Link
           href="/#shop"
@@ -59,7 +69,6 @@ export default function ProductPageContent({ product, relatedProducts }: Product
         </Link>
       </div>
 
-      {/* Product details */}
       <section className="section-padding pt-8">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -70,14 +79,25 @@ export default function ProductPageContent({ product, relatedProducts }: Product
               transition={{ duration: 0.6 }}
               className="relative aspect-square rounded-2xl overflow-hidden bg-cream-200"
             >
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+              {product.imageUrl ? (
+                <Image
+                  src={product.imageUrl}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-espresso-lighter font-sans">
+                  No image
+                </div>
+              )}
+              {outOfStock && (
+                <div className="absolute top-4 right-4 bg-espresso/80 text-cream-50 text-sm font-sans font-medium px-4 py-2 rounded-full">
+                  Sold Out
+                </div>
+              )}
             </motion.div>
 
             {/* Product info */}
@@ -103,69 +123,68 @@ export default function ProductPageContent({ product, relatedProducts }: Product
                 {product.longDescription}
               </p>
 
-              {/* Quantity selector */}
-              <div className="mb-6">
-                <label className="block font-sans text-sm text-espresso-lighter mb-2">
-                  Quantity
-                </label>
-                <div className="inline-flex items-center border border-cream-300 rounded-lg">
-                  <button
-                    onClick={decrementQuantity}
-                    className="p-3 hover:bg-cream-200 rounded-l-lg transition-colors"
-                    aria-label="Decrease quantity"
-                  >
-                    <Minus className="w-4 h-4 text-espresso" strokeWidth={1.5} />
-                  </button>
-                  <span className="font-sans text-base text-espresso w-12 text-center">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={incrementQuantity}
-                    className="p-3 hover:bg-cream-200 rounded-r-lg transition-colors"
-                    aria-label="Increase quantity"
-                  >
-                    <Plus className="w-4 h-4 text-espresso" strokeWidth={1.5} />
-                  </button>
-                </div>
-              </div>
+              {!outOfStock && (
+                <>
+                  {/* Quantity selector */}
+                  <div className="mb-6">
+                    <label className="block font-sans text-sm text-espresso-lighter mb-2">
+                      Quantity
+                    </label>
+                    <div className="inline-flex items-center border border-cream-300 rounded-lg">
+                      <button
+                        onClick={decrementQuantity}
+                        className="p-3 hover:bg-cream-200 rounded-l-lg transition-colors"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="w-4 h-4 text-espresso" strokeWidth={1.5} />
+                      </button>
+                      <span className="font-sans text-base text-espresso w-12 text-center">
+                        {quantity}
+                      </span>
+                      <button
+                        onClick={incrementQuantity}
+                        className="p-3 hover:bg-cream-200 rounded-r-lg transition-colors"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="w-4 h-4 text-espresso" strokeWidth={1.5} />
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Minimum order note */}
-              {minQty > 1 && (
-                <p className="font-sans text-sm text-espresso-lighter italic mb-6">
-                  {content.products.productMinOrderNote.replace('{minQty}', String(minQty))}
-                </p>
+                  {minQty > 1 && (
+                    <p className="font-sans text-sm text-espresso-lighter italic mb-6">
+                      {(product.metadata.min_order_message || content.products.productMinOrderNote).replace('{minQty}', String(minQty))}
+                    </p>
+                  )}
+                </>
               )}
 
-              {/* Add to cart button */}
               <div className="max-w-sm">
                 <AddToCartButton product={product} quantity={quantity} variant="large" />
               </div>
 
-              {/* Product Details */}
-              <div className="mt-8 pt-6 border-t border-cream-300">
-                <h3 className="font-serif text-lg text-espresso mb-4">Product Details</h3>
-                <div className="space-y-4 font-sans text-sm text-espresso-lighter leading-relaxed">
-                  <p>
-                    <span className="text-espresso font-medium">Ingredients: </span>
-                    {renderIngredients(product.ingredients)}
-                  </p>
-                  <p>
-                    <span className="text-espresso font-medium">Net weight: </span>
-                    {product.weight}
-                  </p>
-                  <p>
-                    Allergens in <strong className="font-semibold">BOLD</strong>.
-                    Produced in a place that handles{' '}
-                    <strong className="font-semibold">all major allergens</strong>.
-                  </p>
+              {/* Product Details — driven by productConfig.detailFields */}
+              {visibleFields.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-cream-300">
+                  <h3 className="font-serif text-lg text-espresso mb-4">Product Details</h3>
+                  <div className="space-y-4 font-sans text-sm text-espresso-lighter leading-relaxed">
+                    {visibleFields.map((field) => (
+                      <p key={field.key}>
+                        <span className="text-espresso font-medium">{field.label}: </span>
+                        {renderDetailValue(product.metadata[field.key], field)}
+                      </p>
+                    ))}
+                    {productConfig.detailNote && (
+                      <p>{renderMarkdown(productConfig.detailNote)}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Related products */}
       {relatedProducts.length > 0 && (
         <section className="section-padding bg-cream-200/50">
           <div className="container-custom">

@@ -135,12 +135,18 @@ export default function Cart() {
                       >
                         {/* Product image */}
                         <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-cream-200 flex-shrink-0">
-                          <Image
-                            src={item.product.image}
-                            alt={item.product.name}
-                            fill
-                            className="object-cover"
-                          />
+                          {item.product.imageUrl ? (
+                            <Image
+                              src={item.product.imageUrl}
+                              alt={item.product.name}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-espresso-lighter text-xs font-sans">
+                              No image
+                            </div>
+                          )}
                         </div>
 
                         {/* Product details */}

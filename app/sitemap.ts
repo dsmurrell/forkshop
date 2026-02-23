@@ -1,10 +1,17 @@
 import { MetadataRoute } from 'next';
-import { products } from '@/lib/products';
+import { getProducts } from '@/lib/products';
 import { getBaseUrl } from '@/lib/shop-config';
 
 const BASE_URL = getBaseUrl();
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let products: Awaited<ReturnType<typeof getProducts>> = [];
+  try {
+    products = await getProducts();
+  } catch {
+    // Stripe not configured yet
+  }
+
   const productPages = products.map((product) => ({
     url: `${BASE_URL}/product/${product.slug}`,
     lastModified: new Date(),

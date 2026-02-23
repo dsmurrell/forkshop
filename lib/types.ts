@@ -5,12 +5,12 @@ export interface Product {
   description: string;
   longDescription: string;
   price: number;
-  image: string;
+  imageUrl: string;
   stripePriceId: string;
-  featured?: boolean;
+  featured: boolean;
   minQuantity: number;
-  weight: string;
-  ingredients: string;
+  stock: number | 'unlimited';
+  metadata: Record<string, string>;
 }
 
 export interface CartItem {
@@ -22,4 +22,3 @@ export interface CheckoutItem {
   productId: string;
   quantity: number;
 }
-

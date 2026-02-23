@@ -2,7 +2,7 @@
 // SHOP CONFIG — The single source of truth for your shop.
 //
 // Fork this repo and edit THIS FILE to make the shop your own.
-// For products, edit lib/products.ts. For images, replace files in public/images/.
+// Products are managed in your Stripe Dashboard — see README.md for setup.
 // ============================================================================
 
 // ---------------------------------------------------------------------------
@@ -205,6 +205,30 @@ export const content = {
     tagline: 'Made with love in small batches',
     motto: 'Small batch. Big flavor.',
   },
+};
+
+// ---------------------------------------------------------------------------
+// Product Display — Maps Stripe metadata to the product detail page.
+// ---------------------------------------------------------------------------
+export interface DetailField {
+  /** Stripe metadata key */
+  key: string;
+  /** Display label shown on the product page */
+  label: string;
+  /** When true, the value supports inline markdown: **bold**, *italic*, and \n line breaks */
+  markdown?: boolean;
+}
+
+export const productConfig = {
+  /** Stripe metadata fields to display in the "Product Details" section */
+  detailFields: [
+    { key: 'ingredients', label: 'Ingredients', markdown: true },
+    { key: 'weight', label: 'Net weight' },
+  ] as DetailField[],
+  /** Optional note shown below product details (null to hide). Supports **bold** and *italic* markdown. */
+  detailNote: 'Allergens in **BOLD**. Produced in a place that handles **all major allergens**.' as string | null,
+  /** How long (in minutes) to hold stock during checkout before releasing it back */
+  stockHoldMinutes: 30,
 };
 
 // ---------------------------------------------------------------------------

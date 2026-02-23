@@ -22,7 +22,10 @@ export default function AddToCartButton({
   const { addItem } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
+  const outOfStock = product.stock !== 'unlimited' && product.stock <= 0;
+
   const handleClick = () => {
+    if (outOfStock) return;
     addItem(product, quantity);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1500);
@@ -31,6 +34,22 @@ export default function AddToCartButton({
   const baseStyles = variant === 'large'
     ? 'w-full py-4 px-6 text-base'
     : 'w-full py-3 px-4 text-sm';
+
+  if (outOfStock) {
+    return (
+      <button
+        disabled
+        className={`
+          ${baseStyles}
+          bg-cream-300 text-espresso-lighter font-sans font-medium rounded-lg
+          cursor-not-allowed flex items-center justify-center gap-2
+          ${className}
+        `}
+      >
+        Out of Stock
+      </button>
+    );
+  }
 
   return (
     <motion.button
@@ -62,4 +81,3 @@ export default function AddToCartButton({
     </motion.button>
   );
 }
-
